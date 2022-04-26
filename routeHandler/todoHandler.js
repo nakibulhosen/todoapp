@@ -6,8 +6,20 @@ const todoSchema = require('../Schemas/todoSchema');
 const Todo = new mongoose.model("Todo", todoSchema)
 
 // GET ALL THE TODOS 
-router.get('/', (req, res) => {
-
+router.get('/', async (req, res) => {
+    await Todo.find({ status: 'active' }, (err, data) => {
+        if (err) {
+            res.status(500).json({
+                error: "There was a server side error",
+                message: err.message
+            })
+        } else {
+            res.status(200).json({
+                message: "Todo was inserted successfully",
+                result: data
+            })
+        }
+    })
 })
 
 // GET A TODO BY ID
@@ -49,8 +61,24 @@ router.post('/create-multi', async (req, res) => {
 })
 
 // UPDATE A TODO
-router.put('/update/:id', (req, res) => {
-
+router.put('/update/:id', async (req, res) => {
+    console.log('todo id', req.params.id)
+    await Todo.updateOne({ _id: req.params.id }, {
+        $set: {
+            status: 'active'
+        }
+    }, (err) => {
+        if (err) {
+            res.status(500).json({
+                error: "There was a server side error",
+                message: err.message
+            })
+        } else {
+            res.status(200).json({
+                message: 'Todo updated successfully'
+            })
+        }
+    })
 })
 
 // DELETE   A TODO
