@@ -31,6 +31,41 @@ router.get('/active', async (req, res) => {
     })
 })
 
+// GET ACTIVE  TODOS 
+router.get('/active-callback', (req, res) => {
+    const todo = new Todo();
+    const data = todo.findActiveCallback((err, data) => {
+        if (!err) {
+            res.status(200).json({
+                message: 'Get active todos with callback',
+                data,
+            })
+        } else {
+            res.status(500).json({
+                message: 'There was a server side error',
+                error: err
+            })
+        }
+    });
+
+})
+
+// GET JS  TODOS 
+router.get('/js', async (req, res) => {
+    try {
+        const data = await Todo.findByJS();
+        res.status(200).json({
+            message: 'JS data retrieve successfully',
+            data,
+        })
+    } catch (error) {
+        res.status(500).json({
+            message: 'There was a server side error',
+            'error': error.message
+        })
+    }
+})
+
 // GET A TODO BY ID
 router.get('/:id', (req, res) => {
     Todo.find({ _id: req.params.id }, (err, data) => {
