@@ -33,8 +33,19 @@ router.post('/create', async (req, res) => {
 })
 
 // CREATE MULTI TODOS
-router.post('/create-multi', (req, res) => {
-
+router.post('/create-multi', async (req, res) => {
+    await Todo.insertMany(req.body, (err) => {
+        if (err) {
+            res.status(500).json({
+                error: "There was a server side error",
+                message: err.message
+            })
+        } else {
+            res.status(200).json({
+                message: 'All todos inserted successfully'
+            })
+        }
+    })
 })
 
 // UPDATE A TODO
