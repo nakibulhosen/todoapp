@@ -6,8 +6,8 @@ const todoSchema = require('../Schemas/todoSchema');
 const Todo = new mongoose.model("Todo", todoSchema)
 
 // GET ALL THE TODOS 
-router.get('/', async (req, res) => {
-    await Todo.find({ status: 'active' }, (err, data) => {
+router.get('/', (req, res) => {
+    Todo.find({ status: 'active' }, (err, data) => {
         if (err) {
             res.status(500).json({
                 error: "There was a server side error",
@@ -15,7 +15,7 @@ router.get('/', async (req, res) => {
             })
         } else {
             res.status(200).json({
-                message: "Todo was inserted successfully",
+                message: "Todos retrieved successfully",
                 result: data
             })
         }
@@ -24,13 +24,25 @@ router.get('/', async (req, res) => {
 
 // GET A TODO BY ID
 router.get('/:id', (req, res) => {
-
+    Todo.find({ _id: req.params.id }, (err, data) => {
+        if (err) {
+            res.status(500).json({
+                error: "There was a server side error",
+                message: err.message
+            })
+        } else {
+            res.status(200).json({
+                message: "Todo retrieved successfully",
+                result: data
+            })
+        }
+    })
 })
 
 // CREATE A TODO
-router.post('/create', async (req, res) => {
+router.post('/create', (req, res) => {
     const newTodo = new Todo(req.body);
-    await newTodo.save((err) => {
+    newTodo.save((err) => {
         if (err) {
             res.status(500).json({
                 error: "There was a server side error",
@@ -45,8 +57,8 @@ router.post('/create', async (req, res) => {
 })
 
 // CREATE MULTI TODOS
-router.post('/create-multi', async (req, res) => {
-    await Todo.insertMany(req.body, (err) => {
+router.post('/create-multi', (req, res) => {
+    Todo.insertMany(req.body, (err) => {
         if (err) {
             res.status(500).json({
                 error: "There was a server side error",
@@ -61,9 +73,9 @@ router.post('/create-multi', async (req, res) => {
 })
 
 // UPDATE A TODO
-router.put('/update/:id', async (req, res) => {
+router.put('/update/:id', (req, res) => {
     console.log('todo id', req.params.id)
-    await Todo.updateOne({ _id: req.params.id }, {
+    Todo.updateOne({ _id: req.params.id }, {
         $set: {
             status: 'active'
         }
@@ -82,7 +94,7 @@ router.put('/update/:id', async (req, res) => {
 })
 
 // DELETE   A TODO
-router.delete('/delete/:id', async (req, res) => {
+router.delete('/delete/:id', (req, res) => {
     Todo.deleteOne({ _id: req.params.id }, (err) => {
         if (err) {
             res.status(500).json({
