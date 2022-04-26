@@ -66,6 +66,22 @@ router.get('/js', async (req, res) => {
     }
 })
 
+// GET J TODOS BY LANGUAGE
+router.get("/language", async (req, res) => {
+
+    try {
+        const data = await Todo.find().byLanguage("react");
+        res.status(200).json({
+            message: 'Todos by language get successfully',
+            data,
+        });
+    } catch (err) {
+        res.status(500).json({
+            message: 'There was a server side error'
+        })
+    }
+});
+
 // GET A TODO BY ID
 router.get('/:id', (req, res) => {
     Todo.find({ _id: req.params.id }, (err, data) => {

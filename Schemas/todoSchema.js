@@ -30,7 +30,15 @@ todoSchema.methods = {
 // static methods
 todoSchema.statics = {
     findByJS: function () {
-        return this.find({ title: /js/i });
+        return this.find({ title: /js/i }); // new RegEx("js","i")
     }
+}
+
+// query language
+todoSchema.query = {
+    byLanguage: function (language) {
+        console.log('by lang', language)
+        return this.find({ title: new RegExp(language, "i") }); // new RegExp()
+    },
 }
 module.exports = todoSchema;
