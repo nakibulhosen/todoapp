@@ -8,21 +8,21 @@ const Todo = new mongoose.model("Todo", todoSchema)
 
 // GET ALL THE TODOS 
 router.get('/', checkLogin, (req, res) => {
-    Todo.find({}, (err, data) => {
-        if (err) {
-            res.status(500).json({
-                error: "There was a server side error",
-                message: err.message
-            })
-        } else {
-            res.status(200).json({
-                message: "Todos retrieved successfully",
-                result: data
-            })
-        }
-    })
+    Todo.find({})
+        .populate("user", "name username -_id")
+        .exec((err, data) => {
+            if (!err) {
+                res.status(200).json({
+                    "message": "Todos retrievrd successfully",
+                    "result": data
+                })
+            } else {
+                res.status(500).json({
+                    "error": err.message
+                })
+            }
+        })
 })
-
 // GET ACTIVE  TODOS 
 router.get('/active', async (req, res) => {
     const todo = new Todo();
