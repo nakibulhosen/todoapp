@@ -101,20 +101,21 @@ router.get('/:id', (req, res) => {
 })
 
 // CREATE A TODO
-router.post('/create', (req, res) => {
-    const newTodo = new Todo(req.body);
-    newTodo.save((err) => {
-        if (err) {
-            res.status(500).json({
-                error: "There was a server side error",
-                message: err.message
-            })
-        } else {
-            res.status(200).json({
-                message: "Todo was inserted successfully"
-            })
-        }
-    })
+router.post('/create', checkLogin, async (req, res) => {
+    const newTodo = new Todo({
+        ...req.body,
+        user: req.userId
+    });
+    try {
+        await newTodo.save();
+        res.status(200).json({
+            "message": "Todo inserted successfully"
+        })
+    } catch (error) {
+        res.status(500).json({
+            error: error.message
+        })
+    }
 })
 
 // CREATE MULTI TODOS
