@@ -30,10 +30,10 @@ const errorHandler = (err, req, res, next) => {
     if (res.headerSent) {
         return next(err.message)
     }
-    res.status(500).json({ error: err.message })
+    res.status(500).json({ error: err })
 }
 
-// app.use(errorHandler)
+app.use(errorHandler)
 
 app.listen(3000, () => {
     console.log('Listenting to the port 3000')
