@@ -11,7 +11,7 @@ const checkLogin = (req, res, next) => {
         req.userid = decoded.userid;
         next()
     } catch (error) {
-        next('Authentication error')
+        next('Authentication error. Please Login to continue')
     }
 }
 
