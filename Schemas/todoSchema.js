@@ -3,17 +3,22 @@ const mongoose = require('mongoose');
 const todoSchema = mongoose.Schema({
     title: {
         type: String,
-        required: true,
-        error: 'title is required'
+        required: [true, 'Title is required']
     },
     description: String,
     status: {
         type: String,
-        enum: ['active', 'inactive']
+        enum: ['active', 'inactive'],
+        require: [true, 'Invalid todo status'],
     },
     date: {
         type: Date,
         default: Date.now,
+    },
+    user: {
+        type: mongoose.Types.ObjectId,
+        ref: "User",
+        required: [true, 'Invalid userid']
     }
 });
 
