@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const todoHandler = require('./routeHandler/todoHandler');
+const userHandler = require('./routeHandler/userHandler');
+require('dotenv').config()
 // initialize express app 
 const app = express();
 // add middleware 
@@ -20,16 +22,18 @@ mongoose.connect('mongodb://localhost/todos', {
         console.log('Error in connecting with database', err)
     })
 // application routes
-app.use('/todo', todoHandler)
+app.use('/todo', todoHandler);
+app.use('/user', userHandler);
 
 // default error handler
-function errorHandler(err, req, res, next) {
+const errorHandler = (err, req, res, next) => {
     if (res.headerSent) {
-        return next(err)
+        return next(err.message)
     }
-    res.status(500).json({ error: err })
+    res.status(500).json({ error: err.message })
 }
 
+// app.use(errorHandler)
 
 app.listen(3000, () => {
     console.log('Listenting to the port 3000')
